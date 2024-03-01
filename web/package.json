@@ -14,18 +14,23 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
+    "atpl": "^0.9.3",
+    "dustjs-linkedin": "^3.0.1",
+    "liquor": "^0.0.5",
     "quasar": "^2.8.0",
+    "twig": "^1.17.1",
+    "velocityjs": "^2.0.6",
     "vue": "^3.4.18",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
-    "eslint": "^8.11.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "eslint-config-prettier": "^8.1.0",
-    "prettier": "^2.5.1",
     "@quasar/app-vite": "^1.4.3",
     "autoprefixer": "^10.4.2",
-    "postcss": "^8.4.14"
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "postcss": "^8.4.14",
+    "prettier": "^2.5.1"
   },
   "engines": {
     "node": "^20 || ^18 || ^16",
