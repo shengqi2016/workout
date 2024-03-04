@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated style="background-color: dimgrey">
+    <q-header id="q_header">
       <q-toolbar>
         <q-btn
           flat
@@ -55,19 +55,20 @@
 <script>
 import { defineComponent, ref, onUnmounted } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
-setInterval(() => {}, 1000);
+
 const time = ref(new Date().toLocaleString());
 const intervalId = setInterval(() => {
   time.value = new Date().toLocaleString();
 }, 1000);
 
-const dark = ref(false);
+const dark = ref(true);
+
 function darkClicked() {
-  dark.value = true
-    ? (document.body.style.backgroundColor = "white")
-    : (document.body.style.backgroundColor = "black");
-  console.log("darkClicked()");
+  dark.value == true
+    ? (document.body.style.backgroundColor = "#A9A9A9")
+    : (document.body.style.backgroundColor = "white");
   dark.value = !dark.value;
+  console.log("changed" + dark.value);
 }
 
 const linksList = [
