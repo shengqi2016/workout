@@ -2,21 +2,11 @@
   <q-layout view="lHh Lpr lFf">
     <q-header id="q_header">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         <q-toolbar-title> Work Out Record </q-toolbar-title>
-
-        <div style="margin-right: 10%">
-          Current: Time: {{ time + "      " }}
+        <div>
+          {{ time }}
         </div>
-
         <q-btn icon="dark_mode" @click="darkClicked" />
       </q-toolbar>
     </q-header>
@@ -25,11 +15,7 @@
       <q-list style="margin-top: 150px">
         <q-item-label header> Super Links </q-item-label>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
       <q-img
         class="absolute-top"
@@ -54,21 +40,16 @@
 
 <script>
 import { defineComponent, ref, onUnmounted } from "vue";
+import { Dark } from "quasar";
 import EssentialLink from "components/EssentialLink.vue";
-
 const time = ref(new Date().toLocaleString());
 const intervalId = setInterval(() => {
   time.value = new Date().toLocaleString();
 }, 1000);
 
-const dark = ref(true);
-
+Dark.set(false);
 function darkClicked() {
-  dark.value == true
-    ? (document.body.style.backgroundColor = "#A9A9A9")
-    : (document.body.style.backgroundColor = "white");
-  dark.value = !dark.value;
-  console.log("changed" + dark.value);
+  Dark.toggle();
 }
 
 const linksList = [
@@ -89,6 +70,7 @@ const linksList = [
 onUnmounted(() => {
   clearInterval(intervalId);
 });
+
 export default defineComponent({
   name: "MainLayout",
 
@@ -98,7 +80,6 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false);
-
     return {
       essentialLinks: linksList,
       time,
