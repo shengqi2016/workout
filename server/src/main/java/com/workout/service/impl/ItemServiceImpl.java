@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.workout.DatabaseConfig;
+import com.workout.model.User;
 import com.workout.model.Employee;
 import com.workout.model.Item;
 import com.workout.service.ItemService;
@@ -23,7 +24,7 @@ public class ItemServiceImpl implements ItemService {
 	private DatabaseConfig databaseConfig;
 
 	private List<Item> items = new ArrayList<>(); 
-
+	private List<User> Users = new ArrayList<>(); 
 	public ItemServiceImpl() {
 		items.add(new Item(0, "Item 1"));
 		items.add(new Item(1, "Item 2"));
@@ -59,4 +60,56 @@ public class ItemServiceImpl implements ItemService {
 
 		return employee;
 	}
+
+	@Override
+	public User getUser(int id){
+		String url = databaseConfig.getUrl();
+		System.out.println("DB URL: " + url);
+		User user = null;
+
+		try (Connection conn = DriverManager.getConnection(url)) {
+			String sql = "SELECT * FROM users WHERE id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String username = rs.getString("username");
+				String email = rs.getString("email");
+				user = new User(id, username, email);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return user;
+
+
+	}
+
+	@Override
+	public List<User> getUsers(){
+		Users.clear();
+		String url= databaseConfig.getUrl();
+		System.out.println("DB URL:-- " + url);
+		User user=null;
+		
+		try (Connection conn = DriverManager.getConnection(url)) {
+			String sql = "SELECT * FROM users";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			try(ResultSet rs = pstmt.executeQuery()){
+				while(rs.next()){
+				int id=rs.getInt("id");
+				String username = rs.getString("username");
+				String email = rs.getString("email");
+				user = new User(id, username, email);
+				Users.add(user);
+				}
+			}			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} 
+			return Users;
+	}
+
 }

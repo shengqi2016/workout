@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.workout.model.Employee;
 import com.workout.model.Item;
+import com.workout.model.User;
 import com.workout.service.ItemService;
 
 @RestController
@@ -26,5 +27,17 @@ public class ItemController {
 	public Employee getData() {
 		return itemService.getEmployee(1);
 	}
+
+	@RequestMapping("/user")
+	public User getUser() {
+		return itemService.getUser(2);
+	}
+	@RequestMapping("/users")
+	public List<User> getUsers() {
+
+		return itemService.getUsers();
+	}
+
+
 
 }
