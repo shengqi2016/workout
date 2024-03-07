@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.spi.DirObjectFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.workout.DatabaseConfig;
 import com.workout.model.User;
@@ -112,4 +115,27 @@ public class ItemServiceImpl implements ItemService {
 			return Users;
 	}
 
+
+	@Override
+	public void AddUser(User user) {
+
+		String url= databaseConfig.getUrl();
+	
+		System.out.println("Im in adduser()");
+		try (Connection connection = DriverManager.getConnection(url)) {
+			String sql="Insert into users(username,email) values('fish','eatme@gmail,com');";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				System.out.println("insert succeed");
+			preparedStatement.executeUpdate();
+
+
+		}
+
+	
+	} catch (SQLException e) {
+	e.printStackTrace();
+		
+	}
+
+}
 }
