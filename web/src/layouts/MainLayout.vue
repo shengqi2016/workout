@@ -63,7 +63,13 @@ const linksList = [
     title: "Information",
     caption: "Personal Inforamation",
     icon: "account_circle",
-    link: "https://www.google.com",
+    link: "http://localhost:9000/api/#/user",
+  },
+  {
+    title: "Record",
+    caption: "Record workout and meal",
+    icon: "fitness_center",
+    link: "http://localhost:9000/#/record",
   },
 ];
 

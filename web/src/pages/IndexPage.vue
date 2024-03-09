@@ -5,41 +5,6 @@ const selectedDate = ref("");
 const calorie = ref("");
 const weight = ref("");
 const result = ref([]);
-const sports = ref("");
-const options = [
-  {
-    label: "足球",
-    value: "soccer",
-  },
-  {
-    label: "板球",
-    value: "cricket",
-  },
-  {
-    label: "曲棍球",
-    value: "field_hockey",
-  },
-  {
-    label: "网球",
-    value: "tennis",
-  },
-  {
-    label: "排球",
-    value: "volleyball",
-  },
-  {
-    label: "乒乓球",
-    value: "table_tennis",
-  },
-  {
-    label: "棒球",
-    value: "baseball",
-  },
-  {
-    label: "高尔夫",
-    value: "golf",
-  },
-];
 const username = ref("");
 const email = ref("");
 
@@ -65,13 +30,16 @@ function sendnewuser() {
       email: email.value,
     };
     console.log("User data:", user);
+
     $api
       .post("http://localhost:8080/api/add", user)
       .then((response) => {
         console.log("Data sent successfully:", response.data);
+        alert("Data sent Successfully");
       })
       .catch((error) => {
         console.error("Error sending data:", error);
+        alert("Error sending data");
       });
   } else {
     alert("Please Fill the button");
@@ -86,24 +54,40 @@ function sendnewuser() {
       <!-- Row 1 -->
       <div class="row">
         <div class="col-12 col-md-4"></div>
-        <div class="col-12 col-md-2">
-          <q-input filled v-model="weight" label="Weight(kg)" />
-        </div>
         <div class="col-12 col-md-2"></div>
-        <div class="col-12 col-md-2">
-          <q-input filled v-model="calorie" label="Calorie" />
-        </div>
+        <div class="col-12 col-md-2"></div>
+        <div class="col-12 col-md-2"></div>
         <div class="col-12 col-md-2"></div>
       </div>
       <br />
       <br />
-      <br />
-      <!-- Row 2 -->
 
+      <!-- Row 2 -->
       <br />
       <br />
-      <br />
+
       <!-- Row 3 -->
+      <div class="row">
+        <div class="col-12 col-md-3">
+          <q-input filled v-model="weight" label="Weight(kg)" />
+        </div>
+        <div class="col-12 col-md-3"></div>
+        <div class="col-12 col-md-3">
+          <q-input filled v-model="calorie" label="Calorie" />
+        </div>
+        <div class="col-12 col-md-3"></div>
+      </div>
+      <br />
+      <br />
+
+      <!-- Row 4 -->
+      <div class="row">
+        <div class="col-12 col-md-12"></div>
+      </div>
+      <br />
+      <br />
+
+      <!-- Row 5 -->
       <div class="row">
         <div class="col-12 col-md-3">
           <q-input filled v-model="username" label="UserName" />
@@ -114,7 +98,10 @@ function sendnewuser() {
         </div>
         <div class="col-12 col-md-3"></div>
       </div>
-      <!-- Row  -->
+      <br />
+      <br />
+
+      <!-- Row  6-->
       <div class="row">
         <div class="col-12 col-md-4"></div>
         <div class="col-12 col-md-3">
@@ -127,15 +114,11 @@ function sendnewuser() {
         <div class="col-12 col-md-5"></div>
       </div>
       <br />
-      <!-- Row Result-->
+      <br />
+
+      <!-- Row 7 Result-->
       <div class="row">
-        <div class="col-12 col-md-12">
-          <q-btn
-            @click="getdata"
-            style="background: lightblue; color: white"
-            label="Get Users's List"
-          />
-        </div>
+        <div class="col-12 col-md-12"></div>
       </div>
     </div>
   </q-page-container>

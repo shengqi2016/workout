@@ -123,11 +123,16 @@ public class ItemServiceImpl implements ItemService {
 	
 		System.out.println("Im in adduser()");
 		try (Connection connection = DriverManager.getConnection(url)) {
-			String sql="Insert into users(username,email) values('fish','eatme@gmail,com');";
+			String sql="Insert into users(username,email) values(?,?);";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-				System.out.println("insert succeed");
+				
+				String username=user.getUsername();
+				String email=user.getEmail();
+				System.out.println("username: "+username+"|email:"+email);
+				preparedStatement.setString(1, username);
+				preparedStatement.setString(2, email);			 
 			preparedStatement.executeUpdate();
-
+			System.out.println("insert succeed");
 
 		}
 

@@ -1,0 +1,127 @@
+<script setup>
+import { ref, getCurrentInstance } from "vue";
+import axios from "axios";
+const selectedDate = ref("");
+const calorie = ref("");
+const weight = ref(0);
+const heartrate = ref(0);
+const username = ref("");
+const email = ref("");
+const model3 = ref(4.5);
+const tab = ref("bodyrecord");
+const measure = ref("kg");
+const $api = getCurrentInstance().appContext.config.globalProperties.$api;
+const options = ["kg", "pound"];
+function resetModels() {
+  model3.value = 3.0;
+}
+</script>
+
+<template>
+  <q-page-container>
+    <div class="row">
+      <div class="col-12 col-md-2"></div>
+      <div class="col-12 col-md-8">
+        <div class="q-gutter-y-md">
+          <q-card>
+            <q-tabs
+              v-model="tab"
+              dense
+              class="text-grey"
+              active-color="primary"
+              indicator-color="primary"
+              align="justify"
+              narrow-indicator
+            >
+              <q-tab name="bodyrecord" label="Body Record" />
+              <q-tab name="sportrecord" label="WorkOut Record" />
+              <q-tab name="foodintake" label="Food intake" />
+            </q-tabs>
+
+            <q-separator />
+
+            <q-tab-panels v-model="tab" animated>
+              <q-tab-panel name="bodyrecord">
+                <br />
+                <div class="text-h6">Body Record</div>
+
+                <!-- row-1 -->
+                <div class="row">
+                  <div class="col-12 col-md-3">
+                    <q-input outlined v-model="weight" label="Weight" />
+                  </div>
+                  <div class="col-12 col-md-2">
+                    <q-select
+                      outlined
+                      v-model="measure"
+                      :options="options"
+                      label="kg/pound"
+                    />
+                  </div>
+                  <div class="col-12 col-md-1"></div>
+                  <div class="col-12 col-md-5">
+                    <q-input outlined v-model="heartrate" label="Heart rate" />
+                  </div>
+                </div>
+                <!-- row-2 -->
+                <br />
+                <h9>Mood</h9>
+                <div class="row">
+                  <div class="col-12 col-md-7">
+                    <q-rating
+                      v-model="model3"
+                      max="7"
+                      size="3em"
+                      color="red"
+                      color-selected="red-9"
+                      icon="favorite_border"
+                      icon-selected="favorite"
+                      icon-half="favorite"
+                      no-dimming
+                    />
+                  </div>
+                  <div class="col-12 col-md-5">
+                    <q-btn
+                      color="grey"
+                      no-caps
+                      label="Reset Moods"
+                      @click="resetModels"
+                    />
+                  </div>
+                </div>
+              </q-tab-panel>
+
+              <q-tab-panel name="sportrecord">
+                <div class="text-h6">WorkOut Record</div>
+                <!-- row-1 -->
+                <div class="row">
+                  <div class="col-12 col-md-3">
+                    <q-input outlined v-model="weight" label="Weight" />
+                  </div>
+                  <div class="col-12 col-md-2">
+                    <q-select
+                      outlined
+                      v-model="measure"
+                      :options="options"
+                      label="kg/pound"
+                    />
+                  </div>
+                  <div class="col-12 col-md-1"></div>
+                  <div class="col-12 col-md-5">
+                    <q-input outlined v-model="heartrate" label="Heart rate" />
+                  </div>
+                </div>
+              </q-tab-panel>
+
+              <q-tab-panel name="foodintake">
+                <div class="text-h6">Food intake</div>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </q-tab-panel>
+            </q-tab-panels>
+          </q-card>
+        </div>
+      </div>
+      <div class="col-12 col-md-2"></div>
+    </div>
+  </q-page-container>
+</template>
