@@ -10,8 +10,10 @@ const email = ref("");
 const model3 = ref(4.5);
 const tab = ref("bodyrecord");
 const measure = ref("kg");
+const sporp_type = ref("running");
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
-const options = ["kg", "pound"];
+const options_measure = ["kg", "pound"];
+const options_sport = ["running", "hiking"];
 function resetModels() {
   model3.value = 3.0;
 }
@@ -54,7 +56,7 @@ function resetModels() {
                     <q-select
                       outlined
                       v-model="measure"
-                      :options="options"
+                      :options="options_measure"
                       label="kg/pound"
                     />
                   </div>
@@ -95,17 +97,15 @@ function resetModels() {
                 <div class="text-h6">WorkOut Record</div>
                 <!-- row-1 -->
                 <div class="row">
-                  <div class="col-12 col-md-3">
-                    <q-input outlined v-model="weight" label="Weight" />
-                  </div>
-                  <div class="col-12 col-md-2">
+                  <div class="col-12 col-md-5">
                     <q-select
                       outlined
-                      v-model="measure"
-                      :options="options"
-                      label="kg/pound"
+                      v-model="sporp_type"
+                      :options="options_sport"
+                      label="Sport Types"
                     />
                   </div>
+
                   <div class="col-12 col-md-1"></div>
                   <div class="col-12 col-md-5">
                     <q-input outlined v-model="heartrate" label="Heart rate" />
