@@ -5,15 +5,27 @@ const selectedDate = ref("");
 const calorie = ref("");
 const weight = ref(0);
 const heartrate = ref(0);
+const dataOfWork = ref("2019/02/01");
+const duration = "0";
 const username = ref("");
 const email = ref("");
 const model3 = ref(4.5);
+const times = ref(0);
 const tab = ref("bodyrecord");
 const measure = ref("kg");
 const sporp_type = ref("running");
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
 const options_measure = ["kg", "pound"];
-const options_sport = ["running", "hiking"];
+const options_sport = [
+  "Running",
+  "Cycling",
+  "Swimming",
+  "Weightlifting",
+  "Yoga",
+  "Basketball",
+  "Jump Rope",
+  "Hiking",
+];
 function resetModels() {
   model3.value = 3.0;
 }
@@ -97,6 +109,14 @@ function resetModels() {
                 <div class="text-h6">WorkOut Record</div>
                 <!-- row-1 -->
                 <div class="row">
+                  <div class="col-12 col-md-4"></div>
+                  <div class="col-12 col-md-4"><q-date v-model="dataOfWork" /></div>
+                  <div class="col-12 col-md-4">Workout Data : {{ dataOfWork }}</div>
+                </div>
+                <br />
+                <br />
+                <!-- row-2 -->
+                <div class="row">
                   <div class="col-12 col-md-5">
                     <q-select
                       outlined
@@ -107,8 +127,11 @@ function resetModels() {
                   </div>
 
                   <div class="col-12 col-md-1"></div>
-                  <div class="col-12 col-md-5">
-                    <q-input outlined v-model="heartrate" label="Heart rate" />
+                  <div class="col-12 col-md-3">
+                    <q-input outlined v-model="duration" label="Duration (minutes)" />
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <q-input outlined v-model="times" label="Times" />
                   </div>
                 </div>
               </q-tab-panel>
