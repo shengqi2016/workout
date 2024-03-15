@@ -1,21 +1,23 @@
 <script setup>
 import { ref, getCurrentInstance } from "vue";
 import axios from "axios";
-const selectedDate = ref("");
-const calorie = ref("");
-const weight = ref(0);
-const heartrate = ref(0);
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
+
+const weight = ref(null);
+const heartrate = ref(null);
 const dataOfWork = ref("2019/02/01");
-const duration = "0";
-const username = ref("");
-const email = ref("");
+const duration = ref(null);
+
 const model3 = ref(4.5);
-const times = ref(0);
+const times = ref(null);
 const tab = ref("bodyrecord");
 const measure = ref("kg");
 const sporp_type = ref("running");
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
 const options_measure = ["kg", "pound"];
+const errorpart = ref("");
 const options_sport = [
   "Running",
   "Cycling",
@@ -26,125 +28,257 @@ const options_sport = [
   "Jump Rope",
   "Hiking",
 ];
+const Intensity_Level = ref("Low");
+const Intensity_Level_options = ["Low", "Moderate", "High", "Very High"];
+
 function resetModels() {
   model3.value = 3.0;
+}
+
+function validation() {
+  let pass = true;
+  if (weight.value !== null && weight.value > 0) {
+    console.log("weight correct");
+  } else {
+    pass = false;
+    errorpart.value += "Weight Parts| \n";
+  }
+  if (heartrate.value !== null && heartrate.value > 0) {
+    console.log("Heartrate correct");
+  } else {
+    pass = false;
+    errorpart.value += "Heartrate Parts| \n";
+  }
+
+  if (duration.value !== null && duration.value > 0) {
+    console.log("Duration correct");
+  } else {
+    pass = false;
+    errorpart.value += "Duration Parts| \n";
+  }
+
+  if (times.value !== null && times.value > 0) {
+    console.log("Times correct");
+  } else {
+    pass = false;
+    errorpart.value += "Times Parts| \n";
+  }
+
+  if (pass) {
+    $q.notify({
+      icon: "done",
+      position: "center",
+      color: "positive",
+      message: "Submitted",
+    });
+    onReset();
+  } else {
+    $q.notify({
+      color: "negative",
+      position: "center",
+      message: "Errors:\n" + errorpart.value + "has Problem",
+      actions: [
+        {
+          icon: "reset",
+          color: "yellow",
+          label: "reset",
+          handler: () => {
+            onReset();
+          },
+        },
+      ],
+    });
+  }
+}
+
+function onSubmit() {
+  validation();
+}
+function onReset() {
+  times.value = null;
+  weight.value = null;
+  duration.value = null;
+  heartrate.value = null;
+  measure.value = "kg";
+  model3.value = 4.5;
 }
 </script>
 
 <template>
   <q-page-container>
-    <div class="row">
-      <div class="col-12 col-md-2"></div>
-      <div class="col-12 col-md-8">
-        <div class="q-gutter-y-md">
-          <q-card>
-            <q-tabs
-              v-model="tab"
-              dense
-              class="text-grey"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-              narrow-indicator
-            >
-              <q-tab name="bodyrecord" label="Body Record" />
-              <q-tab name="sportrecord" label="WorkOut Record" />
-              <q-tab name="foodintake" label="Food intake" />
-            </q-tabs>
+    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <div class="row">
+        <div class="col-12 col-md-2"></div>
+        <div class="col-12 col-md-8">
+          <div class="q-gutter-y-md">
+            <q-card>
+              <q-tabs
+                v-model="tab"
+                dense
+                class="text-grey"
+                active-color="primary"
+                indicator-color="primary"
+                align="justify"
+                narrow-indicator
+              >
+                <q-tab name="bodyrecord" label="Body Record" />
+                <q-tab name="sportrecord" label="WorkOut Record" />
+              </q-tabs>
 
-            <q-separator />
+              <q-separator />
 
-            <q-tab-panels v-model="tab" animated>
-              <q-tab-panel name="bodyrecord">
-                <br />
-                <div class="text-h6">Body Record</div>
+              <q-tab-panels v-model="tab" animated>
+                <q-tab-panel name="bodyrecord">
+                  <br />
+                  <div class="text-h6">Body Record</div>
 
-                <!-- row-1 -->
-                <div class="row">
-                  <div class="col-12 col-md-3">
-                    <q-input outlined v-model="weight" label="Weight" />
+                  <!-- row-1 -->
+                  <div class="row">
+                    <div class="col-12 col-md-3">
+                      <q-input
+                        outlined
+                        v-model="weight"
+                        label="Weight"
+                        type="number"
+                        :rules="[
+                          (val) => val !== null || 'Please fill your weight',
+                          (val) => val > 0 || 'Please type valid number',
+                        ]"
+                      />
+                    </div>
+                    <div class="col-12 col-md-2">
+                      <q-select
+                        outlined
+                        v-model="measure"
+                        :options="options_measure"
+                        label="Intensity Level"
+                      />
+                    </div>
+                    <div class="col-12 col-md-1"></div>
+                    <div class="col-12 col-md-5">
+                      <q-input
+                        outlined
+                        v-model="heartrate"
+                        label="Heart rate"
+                        type="number"
+                        :rules="[
+                          (val) => val !== null || 'please fill your heartrate ',
+                          (val) => val > 0 || 'Please enter valid number',
+                        ]"
+                      />
+                    </div>
                   </div>
-                  <div class="col-12 col-md-2">
-                    <q-select
-                      outlined
-                      v-model="measure"
-                      :options="options_measure"
-                      label="kg/pound"
-                    />
+                  <!-- row-2 -->
+                  <br />
+                  <div class="text-h6">Mood</div>
+                  <div class="row">
+                    <div class="col-12 col-md-7">
+                      <q-rating
+                        v-model="model3"
+                        max="7"
+                        size="3em"
+                        color="red"
+                        color-selected="red-9"
+                        icon="favorite_border"
+                        icon-selected="favorite"
+                        icon-half="favorite"
+                        no-dimming
+                      />
+                    </div>
+                    <div class="col-12 col-md-5">
+                      <q-btn
+                        color="grey"
+                        no-caps
+                        label="Reset Moods"
+                        @click="resetModels"
+                      />
+                    </div>
                   </div>
-                  <div class="col-12 col-md-1"></div>
-                  <div class="col-12 col-md-5">
-                    <q-input outlined v-model="heartrate" label="Heart rate" />
+                </q-tab-panel>
+
+                <q-tab-panel name="sportrecord">
+                  <div class="text-h6">WorkOut Record</div>
+                  <!-- row-1 -->
+                  <div class="row">
+                    <div class="col-12 col-md-4"></div>
+                    <div class="col-12 col-md-4"><q-date v-model="dataOfWork" /></div>
+                    <div class="col-12 col-md-4">Workout Data : {{ dataOfWork }}</div>
                   </div>
+                  <br />
+                  <br />
+                  <!-- row-2 -->
+                  <div class="row">
+                    <div class="col-12 col-md-5">
+                      <q-select
+                        outlined
+                        v-model="sporp_type"
+                        :options="options_sport"
+                        label="Sport Types"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-1"></div>
+                    <div class="col-12 col-md-3">
+                      <q-input
+                        outlined
+                        v-model="duration"
+                        label="Duration (minutes)"
+                        type="number"
+                        :rules="[
+                          (val) => val !== null || 'Please fill your weight',
+                          (val) => val > 0 || 'Please type valid number',
+                        ]"
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <q-input
+                        outlined
+                        v-model.number="times"
+                        label="Times"
+                        type="number"
+                        :rules="[
+                          (val) => val !== null || 'please fill your Times ',
+                          (val) => val > 0 || 'Please enter valid number',
+                        ]"
+                      />
+                    </div>
+                  </div>
+                  <br />
+
+                  <!-- row-3 -->
+                  <div class="row">
+                    <div class="col-12 col-md-5">
+                      <q-select
+                        outlined
+                        v-model="Intensity_Level"
+                        :options="Intensity_Level_options"
+                        label="Intensity Level"
+                      />
+                    </div>
+                    <div class="col-12 col-md-1"></div>
+                    <div class="col-12 col-md-3"></div>
+                    <div class="col-12 col-md-3"></div>
+                  </div>
+                  <br />
+                </q-tab-panel>
+              </q-tab-panels>
+              <q-separator />
+              <br />
+              <br />
+              <div class="row">
+                <div class="col-12 col-md-5"></div>
+                <div class="col-12 col-md-3">
+                  <q-btn push color="primary" label="Sumbit" type="submit" />
                 </div>
-                <!-- row-2 -->
-                <br />
-                <h9>Mood</h9>
-                <div class="row">
-                  <div class="col-12 col-md-7">
-                    <q-rating
-                      v-model="model3"
-                      max="7"
-                      size="3em"
-                      color="red"
-                      color-selected="red-9"
-                      icon="favorite_border"
-                      icon-selected="favorite"
-                      icon-half="favorite"
-                      no-dimming
-                    />
-                  </div>
-                  <div class="col-12 col-md-5">
-                    <q-btn
-                      color="grey"
-                      no-caps
-                      label="Reset Moods"
-                      @click="resetModels"
-                    />
-                  </div>
+                <div class="col-12 col-md-4">
+                  <q-btn push color="primary" label="Reset" type="reset" />
                 </div>
-              </q-tab-panel>
-
-              <q-tab-panel name="sportrecord">
-                <div class="text-h6">WorkOut Record</div>
-                <!-- row-1 -->
-                <div class="row">
-                  <div class="col-12 col-md-4"></div>
-                  <div class="col-12 col-md-4"><q-date v-model="dataOfWork" /></div>
-                  <div class="col-12 col-md-4">Workout Data : {{ dataOfWork }}</div>
-                </div>
-                <br />
-                <br />
-                <!-- row-2 -->
-                <div class="row">
-                  <div class="col-12 col-md-5">
-                    <q-select
-                      outlined
-                      v-model="sporp_type"
-                      :options="options_sport"
-                      label="Sport Types"
-                    />
-                  </div>
-
-                  <div class="col-12 col-md-1"></div>
-                  <div class="col-12 col-md-3">
-                    <q-input outlined v-model="duration" label="Duration (minutes)" />
-                  </div>
-                  <div class="col-12 col-md-3">
-                    <q-input outlined v-model="times" label="Times" />
-                  </div>
-                </div>
-              </q-tab-panel>
-
-              <q-tab-panel name="foodintake">
-                <div class="text-h6">Food intake</div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </q-tab-panel>
-            </q-tab-panels>
-          </q-card>
+              </div>
+              <br />
+            </q-card>
+          </div>
         </div>
       </div>
-      <div class="col-12 col-md-2"></div>
-    </div>
+    </q-form>
   </q-page-container>
 </template>
