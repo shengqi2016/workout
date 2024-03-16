@@ -8,24 +8,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.spi.DirObjectFactory;
+
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 
 import com.workout.DatabaseConfig;
 import com.workout.model.User;
 import com.workout.model.Employee;
 import com.workout.model.Item;
+import com.workout.model.Record;
 import com.workout.service.ItemService;
 
 @Service("itemService")
 public class ItemServiceImpl implements ItemService {
+	
 
 	@Autowired
 	private DatabaseConfig databaseConfig;
 
+	
 	private List<Item> items = new ArrayList<>(); 
 	private List<User> Users = new ArrayList<>(); 
 	public ItemServiceImpl() {
@@ -33,6 +36,10 @@ public class ItemServiceImpl implements ItemService {
 		items.add(new Item(1, "Item 2"));
 		items.add(new Item(2, "Item 3"));
 	}
+
+	
+
+
 
 	@Override
 	public List<Item> getItems() {
@@ -43,6 +50,7 @@ public class ItemServiceImpl implements ItemService {
 	public Employee getEmployee(long id) {
 		String url = databaseConfig.getUrl();
 		System.out.println("DB URL: " + url);
+		
 		Employee employee = null;
 
 		try (Connection conn = DriverManager.getConnection(url)) {
@@ -93,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<User> getUsers(){
 		Users.clear();
-		String url= databaseConfig.getUrl();
+		String url = databaseConfig.getUrl();
 		System.out.println("DB URL:-- " + url);
 		User user=null;
 		
@@ -119,8 +127,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public void AddUser(User user) {
 
-		String url= databaseConfig.getUrl();
-	
+		String url = databaseConfig.getUrl();
 		System.out.println("Im in adduser()");
 		try (Connection connection = DriverManager.getConnection(url)) {
 			String sql="Insert into users(username,email) values(?,?);";
@@ -142,5 +149,40 @@ public class ItemServiceImpl implements ItemService {
 		
 	}
 
+	}
+
+
+
+
+	@Override
+	public void Record(Record record) {
+		String url = databaseConfig.getUrl();
+		System.out.println("Im in record()");
+		try (Connection connection = DriverManager.getConnection(url)) {
+
+			String sql="Insert into record(weight,times,duration,mood,calcalorioesburned) values(?,?,?,?,?);";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				double weight=record.getWeight();
+				double times=record.getTimes();
+				int duration=record.getDurattion();
+				double mood=record.getMood();
+				double calcalorioesburned=record.getCalorioesburned();
+				preparedStatement.setDouble(1, weight);
+				preparedStatement.setDouble(2, times);	
+				preparedStatement.setInt(3,duration);
+				preparedStatement.setDouble(4,mood);
+				preparedStatement.setDouble(5, calcalorioesburned);
+				preparedStatement.executeUpdate();
+			System.out.println("insert succeed");
+			
+			}
+		
+	}catch (SQLException e) {
+		e.printStackTrace();
+			
+		}
+
+
+	
 }
-}
+	}

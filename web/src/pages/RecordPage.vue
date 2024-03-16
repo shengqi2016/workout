@@ -4,17 +4,17 @@ import axios from "axios";
 import { useQuasar } from "quasar";
 
 const $q = useQuasar();
-
+let pass = true;
 const weight = ref(null);
 const heartrate = ref(null);
 const dataOfWork = ref("2019/02/01");
 const duration = ref(null);
-
+const calorioesburned = ref(0);
 const model3 = ref(4.5);
 const times = ref(null);
 const tab = ref("bodyrecord");
 const measure = ref("kg");
-const sporp_type = ref("running");
+const sport_type = ref("running");
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
 const options_measure = ["kg", "pound"];
 const errorpart = ref("");
@@ -28,6 +28,7 @@ const options_sport = [
   "Jump Rope",
   "Hiking",
 ];
+const record = ref([]);
 const Intensity_Level = ref("Low");
 const Intensity_Level_options = ["Low", "Moderate", "High", "Very High"];
 
@@ -36,7 +37,7 @@ function resetModels() {
 }
 
 function validation() {
-  let pass = true;
+  pass = true;
   if (weight.value !== null && weight.value > 0) {
     console.log("weight correct");
   } else {
@@ -71,7 +72,6 @@ function validation() {
       color: "positive",
       message: "Submitted",
     });
-    onReset();
   } else {
     $q.notify({
       color: "negative",
@@ -91,8 +91,63 @@ function validation() {
   }
 }
 
+function caloriesculcate() {
+  console.log("calculate");
+  switch (sport_type.value) {
+    case "Running":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 8;
+      break;
+    case "Swimming":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 10;
+      break;
+    case "Weightlifting":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 5;
+      break;
+    case "Yoga":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 3;
+      break;
+    case "Basketball":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 10;
+      break;
+    case "Hiking":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 7;
+      break;
+    case "Jump Rope":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 12;
+      break;
+    case "Cycling":
+      calorioesburned.value = Number(duration.value) * Number(times.value) * 8;
+      break;
+  }
+  calorioesburned.value = Number(duration.value) * Number(times.value) * 8;
+  console.log(calorioesburned.value);
+}
+
 function onSubmit() {
   validation();
+  caloriesculcate();
+  record.value = {
+    weight: weight.value,
+    duration: duration.value,
+    times: times.value,
+    mood: model3.value,
+    calorioesburned: calorioesburned,
+  };
+  console.log(record.value);
+  if (pass) {
+    $api
+      .post("http://localhost:8080/api/record", record)
+      .then((response) => {
+        console.log("Data sent successfully:", response.data);
+        alert("Data sent Successfully");
+      })
+      .catch((error) => {
+        console.error("Error sending data:", error);
+        alert("Error sending data");
+      });
+  } else {
+    console.log("have't send!");
+  }
 }
 function onReset() {
   times.value = null;
@@ -211,7 +266,7 @@ function onReset() {
                     <div class="col-12 col-md-5">
                       <q-select
                         outlined
-                        v-model="sporp_type"
+                        v-model="sport_type"
                         :options="options_sport"
                         label="Sport Types"
                       />
