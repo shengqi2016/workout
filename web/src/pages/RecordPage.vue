@@ -9,7 +9,7 @@ const weight = ref(null);
 const heartrate = ref(null);
 const dataOfWork = ref("2019/02/01");
 const duration = ref(null);
-const calorioesburned = ref(0);
+const calorioesburned = ref(null);
 const model3 = ref(4.5);
 const times = ref(null);
 const tab = ref("bodyrecord");
@@ -131,12 +131,12 @@ function onSubmit() {
     duration: duration.value,
     times: times.value,
     mood: model3.value,
-    calorioesburned: calorioesburned,
+    calorioesburned: calorioesburned.value,
   };
   console.log(record.value);
   if (pass) {
     $api
-      .post("http://localhost:8080/api/record", record)
+      .post("http://localhost:8080/api/record", record.value)
       .then((response) => {
         console.log("Data sent successfully:", response.data);
         alert("Data sent Successfully");

@@ -52,13 +52,45 @@ function sendnewuser() {
   <q-page-container>
     <div class="q-pa-md example-row-stacked-to-horizontal">
       <!-- Row 1 -->
-      <div class="row">
-        <div class="col-12 col-md-4"></div>
-        <div class="col-12 col-md-2"></div>
-        <div class="col-12 col-md-2"></div>
-        <div class="col-12 col-md-2"></div>
-        <div class="col-12 col-md-2"></div>
-      </div>
+      <q-form>
+        <div class="row">
+          <div class="col-12 col-md-4"></div>
+          <div class="col-12 col-md-4"><div class="text-h4">Log In</div></div>
+          <div class="col-12 col-md-4"></div>
+        </div>
+        <br />
+        <br />
+
+        <div class="row">
+          <div class="col-12 col-md-4"></div>
+          <div class="col-12 col-md-4">
+            <q-input
+              filled
+              v-model="username"
+              label="Usermame*"
+              lazy-rules
+              :rules="[(val) => val.length > 0 || 'Please type username']"
+            />
+          </div>
+          <div class="col-12 col-md-4"></div>
+        </div>
+        <!-- Row 2 -->
+        <div class="row">
+          <div class="col-12 col-md-4"></div>
+          <div class="col-12 col-md-4">
+            <q-input
+              filled
+              v-model="password"
+              label="Password"
+              lazy-rules
+              :rules="[
+                (val) => (val !== null && val.length > 0) || 'Please Enter password',
+              ]"
+            />
+          </div>
+          <div class="col-12 col-md-4"></div>
+        </div>
+      </q-form>
       <br />
       <br />
 

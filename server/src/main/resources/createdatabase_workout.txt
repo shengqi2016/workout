@@ -1,0 +1,6 @@
+create table if NOt EXISTS account(id INTEGER PRIMARY KEY AUTOINCREMENT,username text Not null,password text Not null, admin boolean not null);
+Insert into account (username,password,admin) values('admin','admin',1);
+Create table if not exists profile(id INTEGER primary key,email text not null,Age INTEGER ,gender text,date text not null, weight double not null, height double not null);
+Insert into profile (id,email,Age,gender,date,weight,height) values(1,'admin',100,'male','2024-03-19',78,80);
+
+

@@ -153,25 +153,24 @@ public class ItemServiceImpl implements ItemService {
 
 
 
-
 	@Override
 	public void Record(Record record) {
 		String url = databaseConfig.getUrl();
 		System.out.println("Im in record()");
 		try (Connection connection = DriverManager.getConnection(url)) {
 
-			String sql="Insert into record(weight,times,duration,mood,calcalorioesburned) values(?,?,?,?,?);";
+			String sql="Insert into record(weight,times,duration,mood,calorioesburned) values(?,?,?,?,?);";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				double weight=record.getWeight();
 				double times=record.getTimes();
 				int duration=record.getDurattion();
 				double mood=record.getMood();
-				double calcalorioesburned=record.getCalorioesburned();
+				double calorioesburned=record.getCalorioesburned();
 				preparedStatement.setDouble(1, weight);
 				preparedStatement.setDouble(2, times);	
 				preparedStatement.setInt(3,duration);
 				preparedStatement.setDouble(4,mood);
-				preparedStatement.setDouble(5, calcalorioesburned);
+				preparedStatement.setDouble(5, calorioesburned);
 				preparedStatement.executeUpdate();
 			System.out.println("insert succeed");
 			

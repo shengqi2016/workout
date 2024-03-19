@@ -30,7 +30,7 @@ public class ItemController {
 
 @PostMapping("/record")
 public void Record(@RequestBody Record record){
-	  System.out.println("Received user data: " + record.getWeight());
+	  System.out.println("Received record: " + record.getWeight());
 	itemService.Record(record);
 }
 
