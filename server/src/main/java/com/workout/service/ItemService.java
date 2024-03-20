@@ -7,12 +7,11 @@ import org.springframework.stereotype.Service;
 import com.workout.model.Employee;
 import com.workout.model.Item;
 import com.workout.model.User;
+import com.workout.model.Member;
 import com.workout.model.Record;
 public interface ItemService {
 
 	List<Item> getItems();
-
-	Employee getEmployee(long id);
 
 	User getUser(int id);
 	
@@ -21,4 +20,6 @@ public interface ItemService {
 	void AddUser(User user);
 
 	void Record(Record record);
+
+	int validation(Member member);
 }

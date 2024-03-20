@@ -13,7 +13,7 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list style="margin-top: 150px">
-        <q-item-label header> Super Links </q-item-label>
+        <q-item-label header> Super Links</q-item-label>
 
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
@@ -41,6 +41,7 @@
 <script>
 import { defineComponent, ref, onUnmounted } from "vue";
 import { Dark } from "quasar";
+import { useRoute } from "vue-router";
 import EssentialLink from "components/EssentialLink.vue";
 const time = ref(new Date().toLocaleString());
 const intervalId = setInterval(() => {
@@ -86,6 +87,7 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false);
+
     return {
       essentialLinks: linksList,
       time,

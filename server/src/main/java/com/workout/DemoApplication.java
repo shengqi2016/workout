@@ -24,6 +24,7 @@ public class DemoApplication {
             }
         };
     }
+    
 	// @Bean
     // public WebMvcConfigurer corsConfigurer() {
     //     return new WebMvcConfigurer() {

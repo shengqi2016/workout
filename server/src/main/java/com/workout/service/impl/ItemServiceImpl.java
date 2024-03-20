@@ -8,17 +8,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
 
 import com.workout.DatabaseConfig;
-import com.workout.model.User;
-import com.workout.model.Employee;
 import com.workout.model.Item;
+import com.workout.model.Member;
 import com.workout.model.Record;
+import com.workout.model.User;
 import com.workout.service.ItemService;
 
 @Service("itemService")
@@ -46,31 +43,6 @@ public class ItemServiceImpl implements ItemService {
 		return items;
 	}
 
-	@Override
-	public Employee getEmployee(long id) {
-		String url = databaseConfig.getUrl();
-		System.out.println("DB URL: " + url);
-		
-		Employee employee = null;
-
-		try (Connection conn = DriverManager.getConnection(url)) {
-			String sql = "SELECT * FROM employees WHERE id = ?";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setLong(1, id);
-			ResultSet rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				String name = rs.getString("name");
-				String email = rs.getString("email");
-				int age = rs.getInt("age");
-				employee = new Employee(id, name, email, age);
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-
-		return employee;
-	}
 
 	@Override
 	public User getUser(int id){
@@ -184,4 +156,58 @@ public class ItemServiceImpl implements ItemService {
 
 	
 }
+
+	@Override
+	public int validation(Member member) {
+		String url = databaseConfig.getUrl();
+		int id=0;
+		System.out.println("Im in Validation()");
+		try (Connection connection = DriverManager.getConnection(url)) {
+			String sql="Select * FROM account where username=? AND password=?";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) { 
+				preparedStatement.setString(1, member.getUsername());
+				preparedStatement.setString(2, member.getPassword());
+				try (ResultSet resultSet = preparedStatement.executeQuery()) {
+					if (resultSet.next()) {
+						id=searchId(member.getUsername());
+						System.out.println("Account found:  "+id);
+					
+					} else {
+						System.out.println("Account not found.");
+					}
+				}
+				
+
+
+		}
+		}catch (SQLException e) {
+		e.printStackTrace();
+			
+		}
+
+				return id;
+}
+
+public int searchId(String username){
+	String url = databaseConfig.getUrl();
+	int id=0;
+
+	try (Connection connection = DriverManager.getConnection(url)) {
+		String sql="Select id FROM account where username=?";
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) { 
+			preparedStatement.setString(1, username);
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				id=resultSet.getInt("id");
+			
+			}
+		}
+		}catch (SQLException e) {
+			e.printStackTrace();
+				
+			}
+
+
+return id;
+}
+
 	}
