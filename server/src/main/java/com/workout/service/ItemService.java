@@ -8,6 +8,7 @@ import com.workout.model.Employee;
 import com.workout.model.Item;
 import com.workout.model.User;
 import com.workout.model.Member;
+import com.workout.model.Profile;
 import com.workout.model.Record;
 public interface ItemService {
 
@@ -22,4 +23,7 @@ public interface ItemService {
 	void Record(Record record);
 
 	int validation(Member member);
+	
+	Profile getProfile(int id);
+	
 }

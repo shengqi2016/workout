@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.workout.model.IdDTO;
 import com.workout.model.Item;
 import com.workout.model.Member;
+import com.workout.model.Profile;
 import com.workout.model.Record;
 import com.workout.model.User;
 import com.workout.service.ItemService;
@@ -30,6 +32,12 @@ public class ItemController {
 	public void ANewRecord(@RequestBody Record record) {
 		System.out.println("Received record: " + record.getWeight());
 		itemService.Record(record);
+	}
+	@PostMapping("/inf")
+	public Profile getprofile(@RequestBody IdDTO idDto){
+		Profile profile=new Profile();
+			profile=itemService.getProfile(idDto.getId());
+		return profile;
 	}
 
 	@RequestMapping("/items")

@@ -14,7 +14,6 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list style="margin-top: 150px">
         <q-item-label header> Super Links</q-item-label>
-
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
       <q-img
@@ -26,7 +25,7 @@
           <q-avatar size="56px" class="q-mb-sm">
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
-          <div class="text-weight-bold" id="name">Qi Sheng</div>
+          <div class="text-weight-bold" id="name">{{ test }}</div>
           <div id="accountName">@JeffQi</div>
         </div>
       </q-img>
@@ -38,12 +37,20 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref, onUnmounted } from "vue";
+<script setup>
+import { ref, onUnmounted, computed } from "vue";
 import { Dark } from "quasar";
-import { useRoute } from "vue-router";
+import { useMemberStore } from "src/stores/member_inf";
 import EssentialLink from "components/EssentialLink.vue";
+const memberStore = useMemberStore();
 const time = ref(new Date().toLocaleString());
+const test = computed(() => {
+  if (memberStore.currentMember) {
+    return memberStore.currentMember.username;
+  }
+  return "username";
+});
+
 const intervalId = setInterval(() => {
   time.value = new Date().toLocaleString();
 }, 1000);
@@ -53,7 +60,7 @@ function darkClicked() {
   Dark.toggle();
 }
 
-const linksList = [
+const essentialLinks = [
   {
     title: "Google",
     caption: "Search Engine",
@@ -62,7 +69,7 @@ const linksList = [
   },
   {
     title: "Information",
-    caption: "Personal Inforamation",
+    caption: "Personal Information",
     icon: "account_circle",
     link: "http://localhost:9000/api/#/user",
   },
@@ -74,29 +81,12 @@ const linksList = [
   },
 ];
 
+const leftDrawerOpen = ref(false);
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+
 onUnmounted(() => {
   clearInterval(intervalId);
-});
-
-export default defineComponent({
-  name: "MainLayout",
-
-  components: {
-    EssentialLink,
-  },
-
-  setup() {
-    const leftDrawerOpen = ref(false);
-
-    return {
-      essentialLinks: linksList,
-      time,
-      leftDrawerOpen,
-      darkClicked,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-    };
-  },
 });
 </script>
