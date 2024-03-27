@@ -39,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
 		return items;
 	}
 
+
 	@Override
 	public User getUser(int id) {
 		String url = databaseConfig.getUrl();
@@ -227,6 +228,84 @@ public class ItemServiceImpl implements ItemService {
 		return profile;
 	}
 
+	@Override
+	public boolean usernameCheck(String username) {
+		String url = databaseConfig.getUrl();
+		boolean pass=true;
+		try (Connection connection = DriverManager.getConnection(url)) {
+			String sql = "Select Count(*) FROM account where username=?";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setString(1, username);
+				try (ResultSet resultSet = preparedStatement.executeQuery()) {
+					if (resultSet.next()) {
+					if(resultSet.getInt(1) > 0)
+					{
+						pass=false;
+					};
+	}
+				}
+			}
+		}
+	catch(SQLException e) {
+		e.printStackTrace();
+		pass=false;
+	}
+	return pass;
+}
 
+	@Override
+	public int signupaccount(Member member) {
+		String url = databaseConfig.getUrl();
+		int id=0;
+		try (Connection connection = DriverManager.getConnection(url)) {
+			String sql = "Insert into account(username,password,admin)Values(?,?,?)";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				
+				preparedStatement.setString(1, member.getUsername());
+				preparedStatement.setString(2, member.getPassword());
+				preparedStatement.setBoolean(3, member.isAdmin());
+				preparedStatement.executeUpdate();
+				System.out.println("insert succeed");
+				id= searchId(member.getUsername());
+			
+
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			
+		}
+			return id;
+	}
+
+	@Override
+	public void addprofile(Profile profile){
+		String url = databaseConfig.getUrl();
+		try (Connection connection = DriverManager.getConnection(url)) {
+			String sql = "INSERT INTO profile (id, email, Age, gender, date, weight, height) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setInt(1, profile.getId());
+				preparedStatement.setString(2, profile.getEmail());
+				preparedStatement.setInt(3, profile.getAge());
+				preparedStatement.setString(4, profile.getGender());
+				preparedStatement.setString(5, profile.getDate());
+				preparedStatement.setDouble(6, profile.getWeight());
+				preparedStatement.setDouble(7, profile.getHeight());
+				preparedStatement.executeUpdate();
+				System.out.println("profile insert succeed");
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			
+		}
 	
+	
+	
+	}
+
+
+
+				
+		
 }

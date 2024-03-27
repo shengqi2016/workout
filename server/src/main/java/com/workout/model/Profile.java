@@ -12,25 +12,7 @@ public class Profile {
     public Profile() {
     }
     
-    public Profile(String email, int age, String gender, String date, double weight, double height) {
-        this.email = email;
-        this.age = age;
-        this.gender = gender;
-        this.date = date;
-        this.weight = weight;
-        this.height = height;
-    }
-    
 
-    public Profile(int id, String email, int age, String gender, String date, double weight, double height) {
-        this.id = id;
-        this.email = email;
-        this.age = age;
-        this.gender = gender;
-        this.date = date;
-        this.weight = weight;
-        this.height = height;
-    }
 
     public int getId() {
         return id;

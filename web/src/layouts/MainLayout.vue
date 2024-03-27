@@ -3,7 +3,9 @@
     <q-header id="q_header">
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title> Work Out Record </q-toolbar-title>
+        <q-toolbar-title @click="goToHomePage" style="user-select: none">
+          Work Out Record
+        </q-toolbar-title>
         <div>
           {{ time }}
         </div>
@@ -44,13 +46,17 @@ import { useMemberStore } from "src/stores/member_inf";
 import EssentialLink from "components/EssentialLink.vue";
 const memberStore = useMemberStore();
 const time = ref(new Date().toLocaleString());
+import { useRouter } from "vue-router";
+const router = useRouter();
 const test = computed(() => {
   if (memberStore.currentMember) {
     return memberStore.currentMember.username;
   }
   return "username";
 });
-
+function goToHomePage() {
+  router.push({ path: "/" });
+}
 const intervalId = setInterval(() => {
   time.value = new Date().toLocaleString();
 }, 1000);

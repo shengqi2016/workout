@@ -26,4 +26,10 @@ public interface ItemService {
 	
 	Profile getProfile(int id);
 	
+	boolean usernameCheck(String username);
+	
+	int signupaccount(Member member);
+
+	void addprofile(Profile profile);
+	
 }

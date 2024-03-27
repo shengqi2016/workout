@@ -2,7 +2,6 @@
 import { ref, getCurrentInstance } from "vue";
 import axios from "axios";
 import { useQuasar } from "quasar";
-
 const $q = useQuasar();
 let pass = true;
 const weight = ref(null);

@@ -14,6 +14,7 @@ import com.workout.model.Member;
 import com.workout.model.Profile;
 import com.workout.model.Record;
 import com.workout.model.User;
+import com.workout.model.Username;
 import com.workout.service.ItemService;
 
 @RestController
@@ -52,7 +53,21 @@ public class ItemController {
 			id= itemService.validation(member);
 		 return id;
 	}
+	@PostMapping("/usernamecheck")
+	public boolean usernameCheck(@RequestBody Username username){
+		boolean pass=true;
+		pass=itemService.usernameCheck(username.getUsername());
+		 return pass;
+	}
 
+	@PostMapping("/signupaccount")
+	public int signupaccount(@RequestBody Member member){
+		System.out.println(member.getPassword()+member.getUsername()+member.isAdmin());
+		int id=0;
+		id=itemService.signupaccount(member);
+		return id;
+
+	}
 	@RequestMapping("/user")
 	public User getUser() {
 		return itemService.getUser(2);
@@ -61,6 +76,11 @@ public class ItemController {
 	@RequestMapping("/users")
 	public List<User> getUsers() {
 		return itemService.getUsers();
+	}
+	@PostMapping("/addProfile")
+	public void addProfile(@RequestBody Profile profile){
+		System.out.println("addprofile"+profile.getHeight()+"|"+profile.getId()+"|"+profile.getDate());
+		itemService.addprofile(profile);
 	}
 
 }
