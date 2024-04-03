@@ -1,5 +1,5 @@
 <script setup>
-import { useQuasar } from "quasar";
+import { useQuasar, LoadingBar } from "quasar";
 import { route } from "quasar/wrappers";
 import {
   getInformation,
@@ -31,7 +31,6 @@ async function onsignup() {
   let id;
 
   try {
-    // 验证用户名是否可用
     result = await validation_username(
       username_signup.value,
       $api,
@@ -50,7 +49,6 @@ async function onsignup() {
 
       console.log(member);
 
-      // 注册用户并获取返回的数据
       const responseData = await signUp_account(
         member,
         $api,
@@ -74,7 +72,6 @@ async function onsignup() {
 
       console.log(profile);
 
-      // 添加用户资料
       const addProfileResponse = await add_profile(
         profile,
         $api,
@@ -98,6 +95,7 @@ function gosignup() {
   router.push({ path: "/signup" });
 }
 function onlogin() {
+  $q.loading.show();
   Validation();
 }
 function Validation() {
@@ -110,6 +108,7 @@ function Validation() {
         console.log("id:" + response.data);
         memberStore.setMember({ id: response.data, username: username.value });
         console.log("Current member: ", memberStore.currentMember.username);
+        $q.loading.hide();
         $q.notify({
           icon: "done",
           position: "center",
@@ -119,6 +118,7 @@ function Validation() {
         username.value = null;
         password.value = null;
       } else {
+        $q.loading.hide();
         $q.notify({
           color: "negative",
           position: "center",
@@ -127,7 +127,14 @@ function Validation() {
       }
     })
     .catch((error) => {
+      $q.loading.hide();
       console.error("error", error);
+      console.log("network error!");
+      $q.notify({
+        position: "center",
+        color: "negative",
+        message: "Network Error!",
+      });
     });
 
   //test
@@ -146,11 +153,19 @@ function signup_reset() {
 </script>
 
 <template>
+  <q-btn
+    label="login"
+    type="button"
+    color="primary"
+    size="lg"
+    @click="layout_login = true"
+  />
   <q-page-container>
     <div class="q-pa-md example-row-stacked-to-horizontal">
       <!-- Row 1 -->
       <br />
       <br />
+
       <q-form @submit="onlogin">
         <div class="row">
           <div class="col-12 col-md-4"></div>
@@ -224,7 +239,6 @@ function signup_reset() {
       <q-header class="bg-primary">
         <q-toolbar>
           <q-toolbar-title>Sign up</q-toolbar-title>
-          <q-btn flat v-close-popup round dense icon="close" />
         </q-toolbar>
       </q-header>
 
