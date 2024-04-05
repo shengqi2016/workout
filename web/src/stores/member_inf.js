@@ -2,14 +2,16 @@ import { defineStore } from "pinia";
 
 export const useMemberStore = defineStore("member", {
   state: () => ({
-    currentMember: null,
+    currentMember: { id: 0, username: 'username'},
+    status:{logout:true},
   }),
   actions: {
     setMember(member) {
       this.currentMember = member;
     },
     resetMember() {
-      this.currentMember = null;
+      this.currentMember = { id: 0, username: 'username'};
+      this.status={logout:true};
     },
   },
   getters: {

@@ -1,5 +1,5 @@
 <script setup>
-import { useQuasar, LoadingBar } from "quasar";
+import { useQuasar } from "quasar";
 import { route } from "quasar/wrappers";
 import {
   getInformation,
@@ -8,9 +8,10 @@ import {
   add_profile,
 } from "src/api/member";
 import { useMemberStore } from "src/stores/member_inf";
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, ref, onMounted } from "vue";
 const memberStore = useMemberStore();
 import { useRouter } from "vue-router";
+import MemberBoard from "./MemberBoard.vue";
 const router = useRouter();
 const $q = useQuasar();
 const username = ref("");
@@ -18,6 +19,7 @@ const username_signup = ref(null);
 const password_signup = ref("");
 const password = ref("");
 const layout = ref(false);
+const layout_login = ref(false);
 const weight = ref(0);
 const height = ref(0);
 const email = ref("");
@@ -25,6 +27,8 @@ const age = ref(2);
 const gender = ref("");
 const weightUnit = ref("");
 const dateOfSignUp = ref("");
+const isloggedout = ref(true);
+
 async function onsignup() {
   console.log(username_signup.value);
   let result;
@@ -115,8 +119,16 @@ function Validation() {
           color: "positive",
           message: "Dear \t" + username.value + ", Login Successfully!!!",
         });
+        $q.cookies.set("username", username.value);
+        $q.cookies.set("password", password.value);
+
         username.value = null;
         password.value = null;
+        memberStore.status.logout = false;
+        isloggedout.value = memberStore.status.logout;
+        layout_login.value = false;
+        console.log("index->member" + isloggedout.value);
+        router.push("/member");
       } else {
         $q.loading.hide();
         $q.notify({
@@ -153,71 +165,11 @@ function signup_reset() {
 </script>
 
 <template>
-  <q-btn
-    label="login"
-    type="button"
-    color="primary"
-    size="lg"
-    @click="layout_login = true"
-  />
-  <q-page-container>
+  <q-page-container v-if="isloggedout">
     <div class="q-pa-md example-row-stacked-to-horizontal">
       <!-- Row 1 -->
       <br />
       <br />
-
-      <q-form @submit="onlogin">
-        <div class="row">
-          <div class="col-12 col-md-4"></div>
-          <div class="col-12 col-md-4 flex flex-center text-h4">LOG IN</div>
-          <div class="col-12 col-md-4"></div>
-        </div>
-        <br />
-        <br />
-        <!-- Row 2 -->
-        <div class="row">
-          <div class="col-12 col-md-4"></div>
-          <div class="col-12 col-md-4">
-            <q-input
-              filled
-              v-model="username"
-              label="Usermame*"
-              lazy-rules
-              :rules="[
-                (val) => (val !== null && val.length > 0) || 'Please type username',
-              ]"
-            />
-          </div>
-          <div class="col-12 col-md-4"></div>
-        </div>
-        <!-- Row 3 -->
-        <br />
-        <div class="row">
-          <div class="col-12 col-md-4"></div>
-          <div class="col-12 col-md-4">
-            <q-input
-              filled
-              v-model="password"
-              label="Password"
-              lazy-rules
-              :rules="[
-                (val) => (val !== null && val.length > 0) || 'Please Enter password',
-              ]"
-            />
-          </div>
-          <div class="col-12 col-md-4"></div>
-        </div>
-        <!-- Row 4 -->
-        <div class="row">
-          <div class="col-12 col-md-4"></div>
-          <div class="col-12 col-md-4 flex flex-center text-h4">
-            <q-btn label="login" type="submit" color="primary" />
-          </div>
-          <div class="col-12 col-md-4"></div>
-        </div>
-        <br />
-      </q-form>
-      <!-- Row 5 -->
       <div class="row">
         <div class="col-12 col-md-4"></div>
         <div class="col-12 col-md-4 flex flex-center text-h4">
@@ -231,8 +183,90 @@ function signup_reset() {
         </div>
         <div class="col-12 col-md-4"></div>
       </div>
+      <br />
+      <!-- Row 2 -->
+      <div class="row">
+        <div class="col-12 col-md-4"></div>
+        <div class="col-12 col-md-4 flex flex-center text-h4">
+          <q-btn
+            label="login"
+            type="button"
+            color="primary"
+            size="lg"
+            @click="layout_login = true"
+          />
+        </div>
+        <div class="col-12 col-md-4"></div>
+      </div>
     </div>
   </q-page-container>
+
+  <q-dialog v-model="layout_login">
+    <q-layout view="Lhh lpR fff" container class="bg-white text-dark">
+      <q-header class="bg-primary">
+        <q-toolbar>
+          <q-toolbar-title>Login</q-toolbar-title>
+        </q-toolbar>
+      </q-header>
+
+      <q-page-container>
+        <q-form @submit="onlogin">
+          <br />
+          <br />
+
+          <div class="row">
+            <div class="col-12 col-md-4"></div>
+            <div class="col-12 col-md-4 flex flex-center text-h4">LOG IN</div>
+            <div class="col-12 col-md-4"></div>
+          </div>
+          <br />
+          <br />
+          <!-- Row 2 -->
+          <div class="row">
+            <div class="col-12 col-md-2"></div>
+            <div class="col-12 col-md-8">
+              <q-input
+                filled
+                v-model="username"
+                label="Usermame*"
+                lazy-rules
+                :rules="[
+                  (val) => (val !== null && val.length > 0) || 'Please type username',
+                ]"
+              />
+            </div>
+            <div class="col-12 col-md-2"></div>
+          </div>
+          <!-- Row 3 -->
+          <br />
+          <div class="row">
+            <div class="col-12 col-md-2"></div>
+            <div class="col-12 col-md-8">
+              <q-input
+                filled
+                v-model="password"
+                label="Password"
+                lazy-rules
+                :rules="[
+                  (val) => (val !== null && val.length > 0) || 'Please Enter password',
+                ]"
+              />
+            </div>
+            <div class="col-12 col-md-2"></div>
+          </div>
+          <!-- Row 4 -->
+          <div class="row">
+            <div class="col-12 col-md-4"></div>
+            <div class="col-12 col-md-4 flex flex-center text-h4">
+              <q-btn label="login" type="submit" color="primary" />
+            </div>
+            <div class="col-12 col-md-4"></div>
+          </div>
+          <br />
+        </q-form>
+      </q-page-container>
+    </q-layout>
+  </q-dialog>
 
   <q-dialog v-model="layout">
     <q-layout view="Lhh lpR fff" container class="bg-white text-dark">
@@ -326,7 +360,7 @@ function signup_reset() {
                 :rules="[(val) => val > 0 || 'Age must be greater than 0']"
               />
 
-              <div class="col-12 col-md-6"><!-- 空列用于对齐 --></div>
+              <div class="col-12 col-md-6"></div>
             </div>
             <div class="row justify-center">
               <q-btn
